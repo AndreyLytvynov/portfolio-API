@@ -1,48 +1,33 @@
-const {
-  addContact,
-  getContactById,
-  removeContact,
-  updateCont,
-  listContacts,
-} = require("../models/contacts");
+const Contact = require("../models/contact.model");
 
 const getContacts = async (req, res) => {
-  const data = await listContacts();
+  const data = await Contact.find();
+
   res.status(200).json({ status: `Successfully!`, statusCode: 200, data });
 };
 
 const getContById = async (req, res) => {
   const { contactId } = req.params;
-  const data = await getContactById(contactId);
-  if (!data) {
-    return res.status(404).json({
-      status: `Failure, no contact with id ${contactId} found!`,
-      statusCode: 404,
-    });
-  }
+
+  const data = await Contact.findById(contactId);
+
   res.status(200).json({ status: `Successfully!`, statusCode: 200, data });
 };
 
 const addContacts = async (req, res) => {
-  const contact = req.body;
-  const data = await addContact(contact);
+  const newContact = await Contact.create(req.body);
+
   res.status(201).json({
     status: `Contact added successfully!`,
     statusCode: 201,
-    data,
+    newContact,
   });
 };
 
 const deleteContact = async (req, res) => {
   const { contactId } = req.params;
-  const data = await removeContact(contactId);
 
-  if (!data) {
-    return res.status(404).json({
-      status: `Failure, no contact with id ${contactId} found!`,
-      statusCode: 404,
-    });
-  }
+  const data = await Contact.findByIdAndRemove(contactId);
 
   res.status(201).json({
     status: `Contact with id ${contactId} deleted successfully!`,
@@ -53,16 +38,25 @@ const deleteContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const { contactId } = req.params;
-  const contact = req.body;
 
-  const data = await updateCont(contactId, contact);
+  const data = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
 
-  if (!data) {
-    return res.status(404).json({
-      status: `Failure, no contact with id ${contactId} found!`,
-      statusCode: 404,
-    });
-  }
+  res.status(200).json({
+    status: `Contact with id ${contactId} change successfully!`,
+    statusCode: 200,
+    data,
+  });
+};
+
+const updateFavorite = async (req, res) => {
+  const { contactId } = req.params;
+
+  const data = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+
   res.status(200).json({
     status: `Contact with id ${contactId} change successfully!`,
     statusCode: 200,
@@ -76,4 +70,5 @@ module.exports = {
   addContacts,
   deleteContact,
   updateContact,
+  updateFavorite,
 };
