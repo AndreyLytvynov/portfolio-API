@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
+const validator = require("express-joi-validation").createValidator({
+  passError: true,
+});
 const {
   addContactValidation,
   updateContactValidation,
+  updateContactFavoriteValidation,
 } = require("../../middlewares/validationMiddleware");
-
 const {
   getContacts,
   getContById,
@@ -14,14 +16,22 @@ const {
   updateContact,
 } = require("../../controllers/contactsController");
 
-router.get("/", getContacts);
+const tryCatch = require("../../utils/try-catch.util");
 
-router.get("/:contactId", getContById);
-
-router.post("/", addContactValidation, addContacts);
-
-router.delete("/:contactId", deleteContact);
-
-router.put("/:contactId", updateContactValidation, updateContact);
+router
+  .get("/", getContacts)
+  .get("/:contactId", tryCatch(getContById))
+  .post("/", validator.body(addContactValidation), addContacts)
+  .delete("/:contactId", deleteContact)
+  .put(
+    "/:contactId",
+    validator.body(updateContactValidation),
+    tryCatch(updateContact)
+  )
+  .patch(
+    "/:contactId/favorite",
+    validator.body(updateContactFavoriteValidation),
+    tryCatch(updateContact)
+  );
 
 module.exports = router;
