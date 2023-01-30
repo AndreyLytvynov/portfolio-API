@@ -3,6 +3,10 @@ const Contact = require("../models/contact.model");
 const getContacts = async (req, res) => {
   const data = await Contact.find();
 
+  if (!data) {
+    res.status(404).json({ status: `Not found`, statusCode: 404 });
+  }
+
   res.status(200).json({ status: `Successfully!`, statusCode: 200, data });
 };
 
@@ -10,6 +14,10 @@ const getContById = async (req, res) => {
   const { contactId } = req.params;
 
   const data = await Contact.findById(contactId);
+
+  if (!data) {
+    res.status(404).json({ status: `Not found`, statusCode: 404 });
+  }
 
   res.status(200).json({ status: `Successfully!`, statusCode: 200, data });
 };
@@ -29,6 +37,10 @@ const deleteContact = async (req, res) => {
 
   const data = await Contact.findByIdAndRemove(contactId);
 
+  if (!data) {
+    res.status(404).json({ status: `Not found`, statusCode: 404 });
+  }
+
   res.status(201).json({
     status: `Contact with id ${contactId} deleted successfully!`,
     statusCode: 204,
@@ -43,6 +55,10 @@ const updateContact = async (req, res) => {
     new: true,
   });
 
+  if (!data) {
+    res.status(404).json({ status: `Not found`, statusCode: 404 });
+  }
+
   res.status(200).json({
     status: `Contact with id ${contactId} change successfully!`,
     statusCode: 200,
@@ -56,6 +72,10 @@ const updateFavorite = async (req, res) => {
   const data = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
+
+  if (!data) {
+    res.status(404).json({ status: `Not found`, statusCode: 404 });
+  }
 
   res.status(200).json({
     status: `Contact with id ${contactId} change successfully!`,
