@@ -1,7 +1,9 @@
 const Contact = require("../models/contact.model");
 
 const getContacts = async (req, res) => {
-  const data = await Contact.find();
+  const { _id } = req.user;
+
+  const data = await Contact.find({ owner: _id });
 
   if (!data) {
     res.status(404).json({ status: `Not found`, statusCode: 404 });
@@ -12,10 +14,11 @@ const getContacts = async (req, res) => {
 
 const getContById = async (req, res) => {
   const { contactId } = req.params;
+  const { _id } = req.user;
 
-  const data = await Contact.findById(contactId);
+  const data = await Contact.find({ _id: contactId, owner: _id });
 
-  if (!data) {
+  if (!data || data.length === 0) {
     res.status(404).json({ status: `Not found`, statusCode: 404 });
   }
 
@@ -23,7 +26,10 @@ const getContById = async (req, res) => {
 };
 
 const addContacts = async (req, res) => {
-  const newContact = await Contact.create(req.body);
+  const { name, email, phone } = req.body;
+
+  const { id } = req.user;
+  const newContact = await Contact.create({ name, email, phone, owner: id });
 
   res.status(201).json({
     status: `Contact added successfully!`,
@@ -34,8 +40,9 @@ const addContacts = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { contactId } = req.params;
+  const { _id } = req.user;
 
-  const data = await Contact.findByIdAndRemove(contactId);
+  const data = await Contact.findOneAndRemove({ _id: contactId, owner: _id });
 
   if (!data) {
     res.status(404).json({ status: `Not found`, statusCode: 404 });
@@ -50,10 +57,15 @@ const deleteContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const { contactId } = req.params;
+  const { _id } = req.user;
 
-  const data = await Contact.findByIdAndUpdate(contactId, req.body, {
-    new: true,
-  });
+  const data = await Contact.findOneAndUpdate(
+    { _id: contactId, owner: _id },
+    req.body,
+    {
+      new: true,
+    }
+  );
 
   if (!data) {
     res.status(404).json({ status: `Not found`, statusCode: 404 });
@@ -68,10 +80,15 @@ const updateContact = async (req, res) => {
 
 const updateFavorite = async (req, res) => {
   const { contactId } = req.params;
+  const { _id } = req.user;
 
-  const data = await Contact.findByIdAndUpdate(contactId, req.body, {
-    new: true,
-  });
+  const data = await Contact.findOneAndUpdate(
+    { _id: contactId, owner: _id },
+    req.body,
+    {
+      new: true,
+    }
+  );
 
   if (!data) {
     res.status(404).json({ status: `Not found`, statusCode: 404 });

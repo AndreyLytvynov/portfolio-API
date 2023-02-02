@@ -1,4 +1,4 @@
-const ValidationError = require("../utils/errors");
+const { CastError } = require("./errors");
 
 const errorHandler = (err, req, res, next) => {
   if (err?.error?.isJoi) {
@@ -8,7 +8,7 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  if (err instanceof ValidationError) {
+  if (err instanceof CastError) {
     return res
       .status(err.status)
       .json({ status: err.message, statusCode: 404 });

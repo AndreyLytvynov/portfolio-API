@@ -7,7 +7,7 @@ const {
   addContactValidation,
   updateContactValidation,
   updateContactFavoriteValidation,
-} = require("../../middlewares/validationMiddleware");
+} = require("../../middlewares/validationContactMiddleware");
 const {
   getContacts,
   getContById,
@@ -17,7 +17,9 @@ const {
 } = require("../../controllers/contactsController");
 const tryCatch = require("../../utils/try-catch.util");
 const isValidId = require("../../middlewares/valitationIdMiddleware");
+const { isAuthorized } = require("../../middlewares/isAuthorizedMiddleware");
 
+router.use(isAuthorized);
 router
   .get("/", getContacts)
   .get("/:contactId", isValidId, tryCatch(getContById))
