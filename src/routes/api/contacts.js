@@ -7,7 +7,7 @@ const {
   addContactValidation,
   updateContactValidation,
   updateContactFavoriteValidation,
-} = require("../../middlewares/validationMiddleware");
+} = require("../../middlewares/validationContactMiddleware");
 const {
   getContacts,
   getContById,
@@ -15,21 +15,25 @@ const {
   deleteContact,
   updateContact,
 } = require("../../controllers/contactsController");
-
 const tryCatch = require("../../utils/try-catch.util");
+const isValidId = require("../../middlewares/valitationIdMiddleware");
+const { isAuthorized } = require("../../middlewares/isAuthorizedMiddleware");
 
+router.use(isAuthorized);
 router
   .get("/", getContacts)
-  .get("/:contactId", tryCatch(getContById))
-  .post("/", validator.body(addContactValidation), addContacts)
-  .delete("/:contactId", deleteContact)
+  .get("/:contactId", isValidId, tryCatch(getContById))
+  .post("/", validator.body(addContactValidation), tryCatch(addContacts))
+  .delete("/:contactId", isValidId, tryCatch(deleteContact))
   .put(
     "/:contactId",
+    isValidId,
     validator.body(updateContactValidation),
     tryCatch(updateContact)
   )
   .patch(
     "/:contactId/favorite",
+    isValidId,
     validator.body(updateContactFavoriteValidation),
     tryCatch(updateContact)
   );
