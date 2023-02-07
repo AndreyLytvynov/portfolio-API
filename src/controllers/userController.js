@@ -1,6 +1,9 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const { jwtToken } = require("../utils/jwt.util");
+const gravatar = require("gravatar");
+const path = require("path");
+const Jimp = require("jimp");
 
 const registration = async (req, res) => {
   const { email, password } = req.body;
@@ -13,7 +16,8 @@ const registration = async (req, res) => {
     });
   }
 
-  const newUser = await User.create({ email, password });
+  const avatarURL = gravatar.url(email, { protocol: "https" });
+  const newUser = await User.create({ email, password, avatarURL });
 
   const token = jwtToken({ _id: newUser._id });
 
@@ -70,8 +74,42 @@ const logout = async (req, res) => {
   res.status(204).json({ status: "No content" });
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const file = req.file;
+
+  const newFileName = `${Date.now()}_${file.originalname}`;
+  const folderPath = path.resolve("public/avatars");
+  const newPath = path.join(folderPath, newFileName);
+
+  await Jimp.read(file.path)
+    .then((avatar) => {
+      return avatar.resize(250, 250).rotate(90).write(newPath);
+    })
+    .catch((error) => {
+      throw error;
+    });
+
+  const avatarURL = path.join("avatars", newFileName);
+
+  const user = await User.findOneAndUpdate(
+    _id,
+    {
+      avatarURL,
+    },
+    { new: true }
+  );
+
+  res.status(200).json({
+    user: {
+      avatarURL: user.avatarURL,
+    },
+  });
+};
+
 module.exports = {
   registration,
   logIn,
   logout,
+  updateAvatar,
 };
