@@ -8,6 +8,8 @@ const {
   logIn,
   logout,
   updateAvatar,
+  verificationEmail,
+  repeatVerificationEmail,
 } = require("../../controllers/userController");
 const { isAuthorized } = require("../../middlewares/isAuthorizedMiddleware");
 const { uploadAvatar } = require("../../middlewares/uploadAvatarMiddleware");
@@ -30,6 +32,8 @@ router
     isAuthorized,
     uploadAvatar.single("avatar"),
     tryCatch(updateAvatar)
-  );
+  )
+  .get("/users/verify/:verificationToken", tryCatch(verificationEmail))
+  .post("/users/verify", tryCatch(repeatVerificationEmail));
 
 module.exports = router;
