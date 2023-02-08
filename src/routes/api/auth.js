@@ -7,10 +7,10 @@ const {
   registration,
   logIn,
   logout,
+  updateAvatar,
 } = require("../../controllers/userController");
-
 const { isAuthorized } = require("../../middlewares/isAuthorizedMiddleware");
-
+const { uploadAvatar } = require("../../middlewares/uploadAvatarMiddleware");
 const tryCatch = require("../../utils/try-catch.util");
 const {
   signupValidation,
@@ -24,6 +24,12 @@ router
     tryCatch(registration)
   )
   .post("/users/login", validator.body(loginValidation), tryCatch(logIn))
-  .get("/users/logout", isAuthorized, tryCatch(logout));
+  .get("/users/logout", isAuthorized, tryCatch(logout))
+  .patch(
+    "/avatars",
+    isAuthorized,
+    uploadAvatar.single("avatar"),
+    tryCatch(updateAvatar)
+  );
 
 module.exports = router;

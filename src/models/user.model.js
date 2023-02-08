@@ -21,6 +21,7 @@ const User = new Schema({
     type: String,
     default: null,
   },
+  avatarURL: String,
 });
 
 User.pre("save", async function () {
