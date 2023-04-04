@@ -1,6 +1,9 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 require("dotenv").config();
+
+const PORT = process.env.PORT || 3002;
+
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
@@ -14,6 +17,6 @@ mongoose
     process.exit(1);
   });
 
-app.listen(3002, () => {
+app.listen(PORT, () => {
   console.log("Server running. Use our API on port: 3002");
 });
