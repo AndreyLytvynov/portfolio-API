@@ -4,7 +4,7 @@ require("dotenv").config();
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@movies.0twhwyt.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@movies.0twhwyt.mongodb.net/movie?retryWrites=true&w=majority`
   )
   .then(() => {
     console.log("Database connection successful");
