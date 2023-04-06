@@ -46,6 +46,7 @@ const loginService = async ({ email, password }) => {
     await User.findOneAndUpdate(user._id, { token });
     return token;
   }
+  return user.token
 };
 
 const logoutService = async (id) => {
