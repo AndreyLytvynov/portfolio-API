@@ -1,34 +1,15 @@
-const { NotAuthorizedError } = require("../helpers/errors");
-const Favorite = require("../models/movies.mdel");
+const Posts = require("../models/posts.model");
 
-const getMoviesService = async ({ _id }) => {
-  const movies = await Favorite.find({ owner: _id });
-  if (!movies) {
-    throw new NotAuthorizedError("Not found");
-  }
-  return movies;
+const addPostsService = async (post) => {
+  const newPost = await Posts.create(post);
+  return newPost;
 };
-
-const addMovieService = async (movie, id) => {
-  const movies = { ...movie, owner: id };
-  const newMovie = await Favorite.create(movies);
-  return newMovie;
-};
-
-const deleteMovieService = async (userId, movieId) => {
-  const data = await Favorite.findOneAndDelete({ owner: userId, id: movieId });
-  return data;
-};
-
-const getCurrentMovieService = async (userId, movieId) => {
-  const data = await Favorite.findOne({ owner: userId, id: movieId });
-
-  return data;
+const getPostsService = async () => {
+  const posts = await Posts.find();
+  return posts;
 };
 
 module.exports = {
-  getMoviesService,
-  addMovieService,
-  deleteMovieService,
-  getCurrentMovieService,
+  addPostsService,
+  getPostsService,
 };

@@ -7,7 +7,8 @@ const PORT = process.env.PORT || 3002;
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@movies.0twhwyt.mongodb.net/movie?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@cluster0.2gnk7ns.mongodb.net/
+    `
   )
   .then(() => {
     console.log("Database connection successful");
