@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3002;
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@cluster0.2gnk7ns.mongodb.net/
+    `mongodb+srv://${process.env.LOGIN}:${process.env.PASSWORD}@cluster0.2gnk7ns.mongodb.net/posts
     `
   )
   .then(() => {
