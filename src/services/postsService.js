@@ -5,7 +5,7 @@ const addPostsService = async (post) => {
   return newPost;
 };
 const getPostsService = async () => {
-  const posts = await Posts.find();
+  const posts = await Posts.find().sort({ date: -1 });
   return posts;
 };
 

@@ -11,6 +11,9 @@ const Posts = new Schema({
   company: {
     type: String,
   },
+  date: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Posts", Posts);

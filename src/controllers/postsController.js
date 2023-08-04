@@ -1,7 +1,7 @@
 const {
   getPostsService,
   addPostsService,
-} = require("../services/movieService");
+} = require("../services/postsService");
 
 const addPosts = async (req, res) => {
   const data = await addPostsService(req.body);
